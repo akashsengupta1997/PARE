@@ -8,6 +8,32 @@ Parts of the code are taken from https://github.com/MandyMo/pytorch_HMR
 """
 
 
+def undo_keypoint_normalisation(normalised_keypoints, img_wh):
+    """
+    Converts normalised keypoints from [-1, 1] space to pixel space i.e. [0, img_wh]
+    """
+    keypoints = (normalised_keypoints + 1) * (img_wh/2.0)
+    return keypoints
+
+
+def orthographic_project_torch(points3D, cam_params, scale_first=False):
+    """
+    Scaled orthographic projection (i.e. weak perspective projection).
+    :param points3D: (B, N, 3) batch of 3D point sets.
+    :param cam_params: (B, 3) batch of weak-perspective camera parameters (scale, trans x, trans y)
+    """
+    if not scale_first:
+        proj_points = cam_params[:, None, [0]] * (points3D[:, :, :2] + cam_params[:, None, 1:])
+    else:
+        proj_points = cam_params[:, None, [0]] * points3D[:, :, :2] + cam_params[:, None, 1:]
+    return proj_points
+
+
+def convert_weak_perspective_to_camera_translation(cam_wp, focal_length, resolution):
+    cam_t = np.array([cam_wp[1], cam_wp[2], 2 * focal_length / (resolution * cam_wp[0] + 1e-9)])
+    return cam_t
+
+
 def batch_rot2aa(Rs):
     """
     Rs is B x 3 x 3
