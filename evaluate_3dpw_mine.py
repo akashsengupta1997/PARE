@@ -628,7 +628,7 @@ if __name__ == '__main__':
                               img_wh=model_cfg.DATASET.IMG_RES,
                               selected_fnames=selected_fnames,
                               visible_joints_threshold=vis_joints_threshold,
-                              gt_visible_joints_threhshold=0.6,
+                              gt_visible_joints_threshold=0.6,
                               extreme_crop=args.extreme_crop,
                               extreme_crop_scale=args.extreme_crop_scale,
                               vis_img_wh=512)
@@ -636,13 +636,8 @@ if __name__ == '__main__':
 
     # Metrics
     metrics = ['pves', 'pves_sc', 'pves_pa', 'pve-ts', 'pve-ts_sc', 'mpjpes', 'mpjpes_sc', 'mpjpes_pa']
-    metrics.extend([metric + '_samples_min' for metric in metrics])
-    metrics.extend(['verts_samples_dist_from_mean', 'joints3D_coco_samples_dist_from_mean',
-                    'joints3D_coco_invis_samples_dist_from_mean', 'joints3D_coco_vis_samples_dist_from_mean'])
     metrics.append('hrnet_joints2D_l2es')
-    metrics.append('hrnet_joints2Dsamples_l2es')
     metrics.append('joints2D_l2es')
-    metrics.append('joints2Dsamples_l2es')
 
     save_path = '/scratch3/as2562/PARE/evaluations/3dpw'
     if args.use_subset:

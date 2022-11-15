@@ -14,7 +14,7 @@ class PW3DEvalDataset(Dataset):
                  img_wh=224,
                  vis_img_wh=512,
                  visible_joints_threshold=0.6,
-                 gt_visible_joints_threhshold=0.6,
+                 gt_visible_joints_threshold=0.6,
                  selected_fnames=None,
                  extreme_crop=False,
                  extreme_crop_scale=None):
@@ -58,7 +58,7 @@ class PW3DEvalDataset(Dataset):
         self.img_wh = img_wh
         self.vis_img_wh = vis_img_wh
         self.visible_joints_threshold = visible_joints_threshold
-        self.gt_visible_joints_threhshold = gt_visible_joints_threhshold
+        self.gt_visible_joints_threshold = gt_visible_joints_threshold
         self.normalize_img = Normalize(mean=[0.485, 0.456, 0.406],
                                        std=[0.229, 0.224, 0.225])
 
@@ -90,7 +90,7 @@ class PW3DEvalDataset(Dataset):
         joints2D_coco_conf = joints2D_coco[:, 2]
         joints2D_coco = joints2D_coco[:, :2] * np.array([self.img_wh / float(orig_width),
                                                          self.img_wh / float(orig_height)])
-        joints2D_coco_vis = joints2D_coco_conf > self.gt_visible_joints_threhshold
+        joints2D_coco_vis = joints2D_coco_conf > self.gt_visible_joints_threshold
         joints2D_coco_vis[[1, 2, 3, 4]] = joints2D_coco_conf[[1, 2, 3, 4]] > 0.1  # Different threshold for these because confidences are generally very low for GT 2D keypoints.
 
         hrnet_kps_path = os.path.join(self.hrnet_kps_dir, os.path.splitext(fname)[0] + '.npy')
